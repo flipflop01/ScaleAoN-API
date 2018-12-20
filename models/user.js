@@ -11,7 +11,12 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    projects: [{
+        projectName: String,
+        items: [{type: String}],
+        tasks: [{type: String}]
+    }]
 });
 
 userSchema.methods.validatePassword = function (password, callback) {

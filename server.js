@@ -63,6 +63,7 @@ app.post('/users/create', (req, res) => {
     //take the name, and the password from the ajax api call
     let name = req.body.name;
     let password = req.body.password;
+    let projects = req.body.projects;
 
     //exclude extra spaces from the name,email and password
     name = name.trim();
@@ -95,7 +96,8 @@ app.post('/users/create', (req, res) => {
             //using the mongoose DB schema, connect to the database and create the new user
             User.create({
                 name,
-                password: hash
+                password: hash,
+                projects
             }, (err, item) => {
 
                 //if creating a new user in the DB returns an error..
@@ -177,6 +179,37 @@ app.delete('/users/:id', function (req, res) {
         });
     });
 });
+
+//--------Saving Projects----------
+app.put('/project/save', (req, res) => {
+
+    let name = req.body.name;
+    let title = req.body.projectName;
+    let items = req.body.items;
+    let tasks = req.body.tasks;
+
+    Project.update({
+        title,
+        items: [{}],
+        tasks: [{}]
+    }, (err, project) => {
+
+        //if saving a new project in the DB returns an error..
+        if (err) {
+            //display it
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        //if saving a new project in the DB is succesfull
+        if (project) {
+
+            //display the new project
+            console.log(`Project \`${title}\` created.`);
+            return res.json(project);
+        }
+    });
+})
 
 //------------------
 exports.app = app;
